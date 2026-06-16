@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>house price prediction
+    </title>
+    <script>
+    
+    </script>
+    <style>
+        body{
+            background-color: #0f172a;
+        }
+        .main {padding:60px;
+            
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            color:#f8fafc;
+        }
+
+        .dashboard {
+            
+          
+            background-color:#18263b;
+            box-shadow: 0 10px 25px -5px rgba(6,182,212,0.35);
+            border-radius: 18px;
+            padding: 50px 50px;
+            display: flex;
+            flex-direction: column;
+            row-gap: 20px;
+
+        }
+
+        input,label,
+        select{ 
+            background-color: #334155;
+             color: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+           border:#475569
+        }
+        label{
+            
+            background:none;
+            margin-bottom:-30px;
+            margin-top:-20px;
+        }
+    
+        .predict-btn {
+            color:#0f172a;
+            background-color: #06b6d4;
+            width: 45%;
+            height: 35px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 10px;
+            border:none;
+            transition:  all ease-in-out 0.2s;
+            
+        }
+        .predict-btn:hover{
+            background-color: #22d3ee;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(6,182,212,0.6);
+        }
+        
+        input::placeholder{
+            color:#94a3b8
+        }
+        input:focus,select:focus{
+              
+            border-color:#06b6d4;
+            box-shadow: 0 0 12px 3px rgba(6,182,212,0.6);
+        }
+        
+        .fade_up{
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.8s ease;
+        }
+       
+        .fade_left{
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+        .show{
+            opacity: 1;
+            transform: translate(0,0) scale(1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+
+        <div class="dashboard fade_up">
+            <h1>House Price Prediction</h1>
+                
+            <input type="number" placeholder="Emi starts at" id="emi" class="fade_left">
+            <input type="number" placeholder="BHK" id="bhk" class="fade_left">
+            <input type="number" placeholder="Total Area in sq. ft" id="total-area" class="fade_left">
+            <input type="number" placeholder="Price per sq. ft" id="price" class="fade_left">
+            <label for="owner-type">Select Owner Type:</label>
+            <select id="owner-type" class="fade_left">
+                <option value="Housing Expert">Housing Expert</option>
+                <option value="Housing Prime Agent">Housing Prime Agent</option>
+                <option value="Agent">Agent</option>
+                <option value="Owner">Owner</option>
+                <option value="Verified Owner">Verified Owner</option>
+            </select>
+
+            
+            <button class="predict-btn" onclick="predict()">Predict</button>
+        
+        </div>
+    </div>
+    <script>
+            const observer = new 
+        IntersectionObserver((entries)=>{
+            entries.forEach(entry=>{
+                if(entry.isIntersecting){
+                    entry.target.classList.add("show");
+                }
+            });
+        })
+        document.querySelectorAll(".fade_up").forEach(el=>{
+            observer.observe(el);
+        });
+        document.querySelectorAll(".fade_left").forEach(el=>{
+            observer.observe(el);
+        });
+        function predict() {
+            let emi = document.getElementById("emi").value;
+            let bhk = document.getElementById("bhk").value;
+            let total_area = document.getElementById("total-area").value;
+            let price_per_ft = document.getElementById("price").value;
+            let owner = document.getElementById("owner-type").value
+            if (emi == "" || bhk == "" || total_area == "" || price_per_ft == "" || owner == "") {
+                alert("Please Fill all the values");
+
+            }
+            fetch("/predict",{
+                method : "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({
+                    emi: emi,
+                    bhk:bhk,
+                    total_area:total_area,
+                    price_per_ft:price_per_ft,
+                    owner:owner
+                })
+            })
+            .then(response => response.json())
+            .then(data=>{
+                console.log(data);
+                
+                alert("The Price of The House : ₹"+data.Price)
+            })
+        }
+           
+    </script>
+</body>
+
+</html>
