@@ -54,7 +54,6 @@ packaging==26.0
 pandas==2.3.3
 parso==0.8.7
 pillow==12.1.0
-python==3.11
 platformdirs==4.10.0
 prompt_toolkit==3.0.52
 protobuf==6.33.5
